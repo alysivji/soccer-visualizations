@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:10.3-alpine
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: sivdev_user
+      POSTGRES_PASSWORD: sivdev_pass
+    ports:
+      - "9432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+  webserver:
+    build:
+      context: .
+    depends_on:
+      - db
+    environment:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://sivdev_user:sivdev_pass@db:5432/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    volumes:
+      - ./dags:/usr/local/airflow/dags
+      - ./plugins:/usr/local/airflow/plugins
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
