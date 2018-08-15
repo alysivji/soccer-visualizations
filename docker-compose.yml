@@ -17,6 +17,7 @@ services:
       context: .
     depends_on:
       - db
+      - scheduler
     environment:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://sivdev_user:sivdev_pass@db:5432/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -25,6 +26,18 @@ services:
       - ./plugins:/usr/local/airflow/plugins
     ports:
       - "8080:8080"
+    command: [ "airflow", "webserver" ]
+
+  scheduler:
+    build:
+      context: .
+    environment:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://sivdev_user:sivdev_pass@db:5432/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    volumes:
+      - ./dags:/usr/local/airflow/dags
+      - ./plugins:/usr/local/airflow/plugins
+    command: [ "airflow", "scheduler" ]
 
 volumes:
   pgdata:

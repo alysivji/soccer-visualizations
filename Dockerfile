@@ -5,7 +5,7 @@ LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
 
 ARG AIRFLOW__CORE__SQL_ALCHEMY_CONN
 ARG AIRFLOW__CORE__EXECUTOR
-ENV AIRFLOW_HOME /usr/local/airlow
+ENV AIRFLOW_HOME /usr/local/airflow
 
 COPY requirements.txt /tmp/
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
