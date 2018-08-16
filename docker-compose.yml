@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+  # infrastructure
   db:
     image: postgres:10.3-alpine
     environment:
@@ -12,31 +13,34 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data/
 
+  # airflow
   webserver:
     build:
       context: .
     depends_on:
       - db
-      - scheduler
     environment:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://sivdev_user:sivdev_pass@db:5432/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
     volumes:
-      - ./dags:/usr/local/airflow/dags
-      - ./plugins:/usr/local/airflow/plugins
+      - ./airflow/__init__.py:/usr/local/airflow/__init__.py
+      - ./airflow/dags:/usr/local/airflow/dags
+      - ./airflow/plugins:/usr/local/airflow/plugins
     ports:
       - "8080:8080"
     command: [ "airflow", "webserver" ]
-
   scheduler:
     build:
       context: .
+    depends_on:
+      - webserver
     environment:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://sivdev_user:sivdev_pass@db:5432/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
     volumes:
-      - ./dags:/usr/local/airflow/dags
-      - ./plugins:/usr/local/airflow/plugins
+      - ./airflow/__init__.py:/usr/local/airflow/__init__.py
+      - ./airflow/dags:/usr/local/airflow/dags
+      - ./airflow/plugins:/usr/local/airflow/plugins
     command: [ "airflow", "scheduler" ]
 
 volumes:
