@@ -5,10 +5,10 @@ from collections import namedtuple
 import pandas as pd
 from PIL import Image
 
-from ..common.render_template import render
+from common.render_template import render
 
 PATH = "supporting-files/pl-logos/"
-COMBINED_PATH = f"{path}/combined/"
+COMBINED_PATH = f"{PATH}/combined/"
 
 
 def split_image(hometeam, awayteam, team_logo, *, create_image=True):

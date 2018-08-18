@@ -4,8 +4,8 @@ import airflow
 from airflow.operators import BashOperator, PythonOperator
 from airflow.models import DAG
 
-from .tidy_results_dataset import transform_results_data
-from .generate_matchup_matrix import create_match_matrix
+from matchup_matrix.tidy_results_dataset import transform_results_data
+from matchup_matrix.generate_matchup_matrix import create_match_matrix
 
 default_args = {
     "owner": "sivpack",
@@ -34,7 +34,7 @@ transform_results = PythonOperator(
     dag=dag,
 )
 
-transform_results.set_upstream(download_results)
+# transform_results.set_upstream(download_results)
 
 
 op_kwargs = {}
@@ -46,4 +46,4 @@ matchup_matrix = PythonOperator(
     dag=dag,
 )
 
-matchup_matrix.set_upstream(transform_results)
+# matchup_matrix.set_upstream(transform_results)

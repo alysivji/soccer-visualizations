@@ -9,6 +9,8 @@ Setting up data pipelines in Apache Airflow.
 
 * [ETL Best Practices with Airflow](https://gtoonstra.github.io/etl-with-airflow/)
 
+https://github.com/puckel/docker-airflow/issues/44#issuecomment-412233169
+
 ## Todo
 
 - [ ] logging

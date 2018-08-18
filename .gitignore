@@ -108,3 +108,4 @@ ENV/
 .pdbrc.py
 pandas-work/
 pl-logos/
+airflow-logs/
