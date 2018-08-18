@@ -28,7 +28,7 @@ services:
     volumes:
       - ./dags:/usr/local/airflow/dags
       - ./plugins:/usr/local/airflow/plugins
-      - ./logs:/usr/local/airflow/logs
+      - ./airflow-logs:/usr/local/airflow/logs
     ports:
       - "8080:8080"
     command: webserver
@@ -42,6 +42,7 @@ services:
     volumes:
       - ./dags:/usr/local/airflow/dags
       - ./plugins:/usr/local/airflow/plugins
+      - ./airflow-logs:/usr/local/airflow/logs
     command: scheduler
 
   # celery
@@ -55,7 +56,7 @@ services:
     volumes:
       - ./dags:/usr/local/airflow/dags
       - ./plugins:/usr/local/airflow/plugins
-      - ./logs:/usr/local/airflow/logs
+      - ./airflow-logs:/usr/local/airflow/logs
     command: worker
 
 volumes:
