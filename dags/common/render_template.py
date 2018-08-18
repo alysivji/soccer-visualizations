@@ -1,8 +1,7 @@
-import os
 import jinja2
 
 
-def render(filename, context):
+def render(path, filename, context):
     """ Given jinja2 template, generate HTML
     Adapted from http://matthiaseisen.com/pp/patterns/p0198/
 
@@ -13,7 +12,6 @@ def render(filename, context):
     Returns:
         * rendered HTML from jinja2 templating engine
     """
-    path = os.path.dirname(os.path.abspath(__file__))
     return (
         jinja2.Environment(loader=jinja2.FileSystemLoader(path or "./"))
         .get_template(filename)

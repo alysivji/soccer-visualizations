@@ -26,6 +26,7 @@ services:
       - ./dags:/usr/local/airflow/dags
       - ./plugins:/usr/local/airflow/plugins
       - ./airflow-logs:/usr/local/airflow/logs
+      - ./dags/matchup_matrix/output:/tmp/work
     ports:
       - "8080:8080"
     command: webserver
@@ -41,6 +42,7 @@ services:
       - ./dags:/usr/local/airflow/dags
       - ./plugins:/usr/local/airflow/plugins
       - ./airflow-logs:/usr/local/airflow/logs
+      - ./dags/matchup_matrix/output:/tmp/work
     command: "scheduler"
 
 volumes:

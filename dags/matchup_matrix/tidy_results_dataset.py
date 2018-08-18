@@ -29,7 +29,7 @@ def get_result(score, score_opp):
 
 def transform_results_data(ds, **kwargs):
     """Turns results data into tidy dataset"""
-    results_file = "premier_league.csv"
+    results_file = "/tmp/work/premier_league.csv"
     year = 2018
     division = "E0"
 
@@ -57,7 +57,7 @@ def transform_results_data(ds, **kwargs):
     )
     results = results.dropna(how="all")
 
-    results.to_csv("/tmp/premier_league_cleaned.csv", index=False)
+    results.to_csv("/tmp/work/premier_league_cleaned.csv", index=False)
 
     # make data in table more readable
     results["Season"] = f"{year}-{year+1}"
@@ -167,4 +167,4 @@ def transform_results_data(ds, **kwargs):
 
     # TODO this is what is stored in our database
     # postgres connector
-    tidy_results.to_csv("/tmp/premier_league_tidy.csv", index=False)
+    tidy_results.to_csv("/tmp/work/premier_league_tidy.csv", index=False)

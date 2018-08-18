@@ -1,13 +1,14 @@
 """Generate Home and Away Matrix"""
 
 from collections import namedtuple
+import os
 
 import pandas as pd
 from PIL import Image
 
 from common.render_template import render
 
-PATH = "supporting-files/pl-logos/"
+PATH = "/tmp/work/supporting-files/pl-logos/"
 COMBINED_PATH = f"{PATH}/combined/"
 
 
@@ -19,13 +20,13 @@ def split_image(hometeam, awayteam, team_logo, *, create_image=True):
     """
 
     # file location
-    combined_img_filepath = f"{combined_path}/{hometeam}_{awayteam}.png"
+    combined_img_filepath = f"{COMBINED_PATH}/{hometeam}_{awayteam}.png"
 
     # if we have to create the image
     if create_image:
         # open images
-        img_home = Image.open(f"{path}/{team_logo[hometeam]}")
-        img_away = Image.open(f"{path}/{team_logo[awayteam]}")
+        img_home = Image.open(f"{PATH}/{team_logo[hometeam]}")
+        img_away = Image.open(f"{PATH}/{team_logo[awayteam]}")
         width, height = img_home.size
 
         img_combined = Image.new("RGBA", (width, height))
@@ -63,16 +64,16 @@ def make_result_image(match_result, team_logo):
         )
     elif match_result.FTHG > match_result.FTAG:
         # show home team's logo
-        img_file_path = f"{path}/{team_logo[match_result.HomeTeam]}"
+        img_file_path = f"{PATH}/{team_logo[match_result.HomeTeam]}"
     else:
         # show away team's logo
-        img_file_path = f"{path}/{team_logo[match_result.AwayTeam]}"
+        img_file_path = f"{PATH}/{team_logo[match_result.AwayTeam]}"
 
     return img_file_path
 
 
 def create_match_matrix(ds, **kwargs):
-    results = pd.read_csv("/tmp/premier_league_cleaned.csv")
+    results = pd.read_csv("/tmp/work/premier_league_cleaned.csv")
     teams = list(results["HomeTeam"].unique()) + list(results["AwayTeam"].unique())
     team_logo = {team: f"{team}.png" for team in teams}
 
@@ -94,7 +95,7 @@ def create_match_matrix(ds, **kwargs):
         match_details["date"] = item.Date
         match_details["home_goals"] = item.FTHG
         match_details["away_goals"] = item.FTAG
-        match_details["result_img"] = make_result_image(item, split_image, team_logo)
+        match_details["result_img"] = make_result_image(item, team_logo)
 
         match_results[key] = match_details
 
@@ -102,7 +103,8 @@ def create_match_matrix(ds, **kwargs):
     # pass in variables, render template, and send
     context = {"match_results": match_results, "team_list": team_list}
 
-    html = render("supporting-files/home_away_matrix_template.html", context)
+    path = os.path.dirname(os.path.abspath(__file__))
+    html = render(path, "home_away_matrix_template.html", context)
 
-    with open("/tmp/output.html", "w") as f:
+    with open("/tmp/work/output.html", "w") as f:
         f.write(html)

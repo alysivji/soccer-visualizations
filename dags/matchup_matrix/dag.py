@@ -21,7 +21,7 @@ dag = DAG(dag_id="matchup_matrix", default_args=default_args, schedule_interval=
 
 download_results = BashOperator(
     task_id="download_results_dataset",
-    bash_command="curl http://www.football-data.co.uk/mmz4281/1819/E0.csv -o /tmp/premier_league.csv",
+    bash_command="curl http://www.football-data.co.uk/mmz4281/1819/E0.csv -o /tmp/work/premier_league.csv",
     dag=dag,
 )
 
