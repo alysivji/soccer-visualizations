@@ -12,6 +12,8 @@ services:
       - "9432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data/
+  redis:
+    image: redis:4.0-alpine
 
   # airflow
   webserver:
@@ -19,14 +21,14 @@ services:
       context: .
     depends_on:
       - db
+      - redis
     environment:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://sivdev_user:sivdev_pass@db:5432/airflow
-      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    privileged: true
     volumes:
       - ./dags:/usr/local/airflow/dags
       - ./plugins:/usr/local/airflow/plugins
       - ./airflow-logs:/usr/local/airflow/logs
-      - ./dags/matchup_matrix/output:/tmp/work
     ports:
       - "8080:8080"
     command: webserver
@@ -37,13 +39,25 @@ services:
       - webserver
     environment:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://sivdev_user:sivdev_pass@db:5432/airflow
-      AIRFLOW__CORE__EXECUTOR: LocalExecutor
     volumes:
       - ./dags:/usr/local/airflow/dags
       - ./plugins:/usr/local/airflow/plugins
       - ./airflow-logs:/usr/local/airflow/logs
-      - ./dags/matchup_matrix/output:/tmp/work
-    command: "scheduler"
+    command: scheduler
+
+  # celery
+  worker:
+    build:
+      context: .
+    depends_on:
+      - webserver
+    environment:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://sivdev_user:sivdev_pass@db:5432/airflow
+    volumes:
+      - ./dags:/usr/local/airflow/dags
+      - ./plugins:/usr/local/airflow/plugins
+      - ./airflow-logs:/usr/local/airflow/logs
+    command: worker
 
 volumes:
   pgdata:

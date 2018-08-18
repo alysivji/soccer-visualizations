@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Premier League Home/Away Matrix</title>
+</head>
+<body>
+
+    <table>
+        <tr>
+            <!--Cell 0, 0 is empty-->
+            <td class="top_cell"></td>
+
+            <!--Away Teams header-->
+            {% for home_team in team_list %}
+                <td class="away_header">
+                    <div class="result_img_box">
+                        <img src="pl-logos/{{ home_team }}.png" />
+                    </div>
+                </td>
+            {% endfor  %}
+        </tr>
+
+        {% for home_team in team_list %}
+            <tr>
+                <!--Home Team left header-->
+                <td class="home_header">
+                    <div class="result_img_box">
+                        <img src="pl-logos/{{ home_team }}.png" />
+                    </div>
+                </td>
+                
+                <!--Go thru each result-->
+                {% for away_team in team_list %}
+                    {% set key = (home_team, away_team) %}
+
+                    <!--display match image-->
+                    {% if key in match_results %}
+                        <td class="matchresult">
+                            <div class="result_img_box">
+                                <img src="{{ match_results[key].result_img }}" />
+                            </div>
+                            <div class="popout">
+                                <div>
+                                    {{ match_results[key].date }}
+                                </div>
+                                <div class="title">
+                                    (H) {{ home_team }}: {{ match_results[key].home_goals }}
+                                </div>
+                                <div class="title">
+                                    (A) {{ away_team }}: {{ match_results[key].away_goals }}
+                                </div>
+                            </div>
+                        </td>
+
+                    <!--diagonals-->
+                    {% elif home_team == away_team %}
+                        <td class="matrix_diagonal"></td>
+                    
+                    <!--game has yet to be played-->
+                    {% else %}
+                        <td class="not_played"></td>
+                    {% endif %}
+                {% endfor %}
+
+            </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
