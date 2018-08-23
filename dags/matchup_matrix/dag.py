@@ -19,12 +19,14 @@ default_args = {
 
 dag = DAG(dag_id="matchup_matrix", default_args=default_args, schedule_interval=None)
 
+# Download csv
 download_results = BashOperator(
     task_id="download_results_dataset",
     bash_command="curl http://www.football-data.co.uk/mmz4281/1819/E0.csv -o /tmp/work/premier_league.csv",
     dag=dag,
 )
 
+# Clean data
 op_kwargs = {}  # TODO: use this for when we are creating for multiple leagues
 transform_results = PythonOperator(
     task_id="transform_results_dataset",
@@ -34,9 +36,7 @@ transform_results = PythonOperator(
     dag=dag,
 )
 
-# transform_results.set_upstream(download_results)
-
-
+# Visualization
 op_kwargs = {}
 matchup_matrix = PythonOperator(
     task_id="create_match_matrix",
@@ -46,4 +46,4 @@ matchup_matrix = PythonOperator(
     dag=dag,
 )
 
-# matchup_matrix.set_upstream(transform_results)
+download_results >> transform_results >> matchup_matrix
