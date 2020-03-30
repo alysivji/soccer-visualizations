@@ -4,7 +4,7 @@ apache-airflow==1.9.0
 asn1crypto==0.24.0
 Babel==2.6.0
 billiard==3.5.0.4
-bleach==2.1.2
+bleach==3.1.4
 celery==4.2.1
 certifi==2018.8.13
 cffi==1.11.5
